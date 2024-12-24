@@ -81,6 +81,13 @@ export default function Home() {
     selectedCardsReducer,
     initalPokemonCardsState
   );
+
+  const handleSubmit = () => {
+    const submitData = cards.filter((c) => c.quantity > 0);
+    console.log({ cards, submitData });
+    //call api to save data
+  };
+
   return (
     <div
       className="
@@ -102,6 +109,17 @@ export default function Home() {
               />
             );
           })}
+        </div>
+        <div className="flex flex-row gap-2 fixed bottom-4 right-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg"
+            onClick={handleSubmit}
+          >
+            Save
+          </button>
+          <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-lg">
+            Reset
+          </button>
         </div>
       </main>
     </div>
