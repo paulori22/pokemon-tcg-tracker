@@ -1,12 +1,13 @@
 import Image from "next/image";
 import { MinusCircleIcon } from "@heroicons/react/24/solid";
 import { ActionDispatch } from "react";
-import { CardsAction, CardsActionKind } from "@/hooks/cardsReducer";
-import { PokemonCardType } from "@/app/tracker/page";
+import { Action, CardsActionKind } from "@/hooks/cardsReducer";
+import { CardResponse } from "@/app/api/my-collection/route";
+import { zeroPad } from "@/lib/utils";
 
 export interface PokemonCardProps {
-  pokemonCard: PokemonCardType;
-  dispatch: ActionDispatch<[action: CardsAction]>;
+  pokemonCard: CardResponse;
+  dispatch: ActionDispatch<[action: Action]>;
 }
 
 export default function PokemonCard({
@@ -26,7 +27,7 @@ export default function PokemonCard({
         })
       }
     >
-      <div className="relative">
+      <div className="relative flex flex-col items-center">
         <button
           className="z-10 absolute top-0 left-0 invisible group-hover:visible"
           onClick={(e) => {
@@ -77,7 +78,8 @@ export default function PokemonCard({
           {pokemonCard.name}
         </p>
         <p className="mb-1 font-normal text-gray-700 dark:text-gray-400">
-          {pokemonCard.information}
+          {pokemonCard.cardBoosters[0].cardExpasionSet.code}{" "}
+          {zeroPad(pokemonCard.numberInExpasionSet, 3)}
         </p>
       </div>
     </div>

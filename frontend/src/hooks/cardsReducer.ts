@@ -1,24 +1,30 @@
+import { CardResponse } from "@/app/api/my-collection/route";
+
 export enum CardsActionKind {
   INCREASE = "INCREASE",
   DECREASE = "DECREASE",
   SET_QUANTITY = "SET_QUANTITY",
+  SET_STATE = "SET_STATE",
 }
 
 export interface CardsAction {
   type: CardsActionKind;
-  payload: PokemonCardType;
+  payload: CardResponse;
 }
+export type Action =
+  | {
+      type:
+        | CardsActionKind.INCREASE
+        | CardsActionKind.DECREASE
+        | CardsActionKind.SET_QUANTITY;
+      payload: CardResponse;
+    }
+  | {
+      type: CardsActionKind.SET_STATE;
+      payload: CardResponse[];
+    };
 
-export interface PokemonCardType {
-  id: string;
-  name: string;
-  information: string;
-  imagePath: string;
-  quantity: number;
-}
-export type CardsState = PokemonCardType[];
-
-export function selectedCardsReducer(state: CardsState, action: CardsAction) {
+export function selectedCardsReducer(state: CardResponse[], action: Action) {
   const { type, payload } = action;
   console.log({ state, type, payload });
   switch (type) {
@@ -49,6 +55,9 @@ export function selectedCardsReducer(state: CardsState, action: CardsAction) {
         return c;
       });
       return newState;
+    }
+    case CardsActionKind.SET_STATE: {
+      return payload;
     }
     default:
       return state;

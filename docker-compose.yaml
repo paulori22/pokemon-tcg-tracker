@@ -4,9 +4,23 @@ services:
       context: .
       dockerfile: ./.docker/frontend/Dockerfile
     container_name: docker-next
+    depends_on: [db]
     command: ["npm", "run", "dev"]
     #command: ["tail", "-f", "/dev/null"]
     ports:
       - "3000:3000"
+      - "5555:5555"
     volumes:
       - ./frontend:/home/node/app
+  db:
+    image: postgres:17.2
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: pokemontcg
+      POSTGRES_DB: pokemon-tcg
+    ports:
+      - "5432:5432"
+    volumes:
+      - .docker/dbdata:/var/lib/postgresql/data
