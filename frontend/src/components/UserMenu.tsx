@@ -31,7 +31,7 @@ export default async function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={null} />
+          <AvatarImage />
           <AvatarFallback>
             <UserCircleIcon className="size-6" />
           </AvatarFallback>
