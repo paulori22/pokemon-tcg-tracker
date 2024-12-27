@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Card, Prisma, UsersOnCards } from "@prisma/client";
 import { prisma } from "../../../../lib/prisma";
 import { auth } from "@/auth";
 
@@ -61,12 +61,17 @@ export async function GET() {
   return Response.json(result);
 }
 
+type CardDTO = {
+  cardId: Card["id"];
+  quantity: UsersOnCards["quantity"];
+};
+
 export async function POST(req: Request) {
   const session = await auth();
   if (!session) {
     throw new Error("User must be logged in to use my collection");
   }
-  const body = await req.json();
+  const body = (await req.json()) as CardDTO[];
   //TODO: validate body before insert
   const data = body.map((userCard) => {
     return { ...userCard, userId: session.user?.id };
