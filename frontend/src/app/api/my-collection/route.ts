@@ -74,7 +74,7 @@ export async function POST(req: Request) {
   const body = (await req.json()) as CardDTO[];
   //TODO: validate body before insert
   const data = body.map((userCard) => {
-    return { ...userCard, userId: session.user?.id };
+    return { ...userCard, userId: session.user?.id as string };
   });
 
   await prisma.$transaction(
