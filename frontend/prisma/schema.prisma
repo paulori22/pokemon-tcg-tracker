@@ -66,6 +66,7 @@ model CardExpasionSet {
     name        String        @unique
     totalCards  Int
     releasedAt  DateTime?
+    imagePath   String?
     cardBooster CardBooster[]
 }
 
@@ -75,6 +76,7 @@ model CardBooster {
     cardExpasionSet   CardExpasionSet @relation(fields: [cardExpasionSetId], references: [id])
     name              String          @unique
     releasedAt        DateTime?       @db.Date
+    imagePath         String?
     cards             Card[]
 }
 

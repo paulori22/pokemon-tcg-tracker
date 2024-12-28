@@ -1,6 +1,7 @@
 import { Card, Prisma, UsersOnCards } from "@prisma/client";
 import { prisma } from "../../../../lib/prisma";
 import { auth } from "@/auth";
+import { NextRequest } from "next/server";
 
 export type CardResponse = Prisma.CardGetPayload<{
   select: {
@@ -24,11 +25,15 @@ export type CardResponse = Prisma.CardGetPayload<{
 
 export type CardApiResponse = CardResponse[];
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const session = await auth();
   if (!session) {
     throw new Error("User must be logged in to use my collection");
   }
+  const expansionSetCode = req.nextUrl.searchParams.get(
+    "expansionSetCode"
+  ) as string;
+
   const cards = await prisma.card.findMany({
     select: {
       id: true,
@@ -50,6 +55,18 @@ export async function GET() {
         select: { quantity: true },
         where: { userId: session.user?.id },
       },
+    },
+    where: {
+      cardBoosters: {
+        some: {
+          cardExpasionSet: {
+            code: expansionSetCode,
+          },
+        },
+      },
+    },
+    orderBy: {
+      numberInExpasionSet: "asc",
     },
   });
   const result = cards.map((c) => {
