@@ -3,17 +3,19 @@ import PokemonCard from "@/components/PokemonCard";
 import { CardsActionKind, selectedCardsReducer } from "@/hooks/cardsReducer";
 import { useEffect, useReducer } from "react";
 import { CardExpansionSetApiResponse } from "../app/api/card-expansion-set/route";
+import { api } from "@/lib/http";
+import { CardApiResponse } from "@/app/api/my-collection/route";
 
 const getUserCards = async (
   expansionSetCode: CardExpansionSetApiResponse[0]["code"]
 ) => {
-  const response = await fetch(
-    `/api/my-collection?expansionSetCode=${expansionSetCode}`
-  );
-  if (!response.ok) {
+  const response = await api.get<CardApiResponse>("my-collection", {
+    params: { expansionSetCode },
+  });
+  if (!response.status) {
     throw new Error("Failed to fetch user data");
   }
-  return response.json();
+  return response.data;
 };
 export interface CardCollectionProps {
   expansionSetCode: CardExpansionSetApiResponse[0]["code"];
@@ -38,13 +40,8 @@ export default function CardCollection({
         const { id, quantity } = c;
         return { cardId: id, quantity };
       });
-    console.log({ submitData });
-    //call api to save data
-    const response = await fetch("/api/my-collection", {
-      method: "POST",
-      body: JSON.stringify(submitData),
-    });
-    console.log(response);
+
+    await api.post("my-collection", submitData);
   };
 
   return (

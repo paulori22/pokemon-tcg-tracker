@@ -11,13 +11,15 @@ import Image from "next/image";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import Link from "next/link";
+import { api } from "@/lib/http";
 
 dayjs.extend(localizedFormat);
 
 export default async function Page() {
-  const response = await fetch("http://localhost:3000/api/card-expansion-set");
-  const cardExpansionSets =
-    (await response.json()) as CardExpansionSetApiResponse;
+  const response = await api.get<CardExpansionSetApiResponse>(
+    "card-expansion-set"
+  );
+  const cardExpansionSets = response.data;
 
   return (
     <div className="flex flex-row flex-wrap gap-4">
