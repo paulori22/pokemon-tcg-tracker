@@ -1,14 +1,9 @@
 import axios from "axios";
-
+// In order this to work at vercel
+// Set NEXT_PUBLIC_URL for production with the custom domain at vercel site
 export const getBaseUrl = () => {
   const baseUrlEnv =
     process.env.NEXT_PUBLIC_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL;
-  console.log({
-    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
-    NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
-    NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
-    baseUrlEnv,
-  });
 
   if (process.env.NEXT_PUBLIC_VERCEL_ENV === "development") {
     return `http://${baseUrlEnv}`;
