@@ -1,6 +1,6 @@
 import { Card, Prisma, UsersOnCards } from "@prisma/client";
 import { prisma } from "../../../../lib/prisma";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 
 export type CardResponse = Prisma.CardGetPayload<{
@@ -26,10 +26,12 @@ export type CardResponse = Prisma.CardGetPayload<{
 export type CardApiResponse = CardResponse[];
 
 export async function GET(req: NextRequest) {
-  const session = await auth();
-  if (!session) {
-    throw new Error("User must be logged in to use my collection");
+  const { userId } = await auth();
+
+  if (!userId) {
+    return new Response("User is not signed in.", { status: 401 });
   }
+
   const expansionSetCode = req.nextUrl.searchParams.get(
     "expansionSetCode"
   ) as string;
@@ -53,7 +55,7 @@ export async function GET(req: NextRequest) {
       },
       userCards: {
         select: { quantity: true },
-        where: { userId: session.user?.id },
+        where: { userId: userId },
       },
     },
     where: {
@@ -69,6 +71,7 @@ export async function GET(req: NextRequest) {
       numberInExpasionSet: "asc",
     },
   });
+
   const result = cards.map((c) => {
     const { userCards, ...rest } = c;
     const quantity = userCards[0]?.quantity ?? 0;
@@ -84,14 +87,16 @@ type CardDTO = {
 };
 
 export async function POST(req: Request) {
-  const session = await auth();
-  if (!session) {
-    throw new Error("User must be logged in to use my collection");
+  const { userId } = await auth();
+
+  if (!userId) {
+    return new Response("User is not signed in.", { status: 401 });
   }
+
   const body = (await req.json()) as CardDTO[];
   //TODO: validate body before insert
   const data = body.map((userCard) => {
-    return { ...userCard, userId: session.user?.id as string };
+    return { ...userCard, userId };
   });
 
   await prisma.$transaction(
