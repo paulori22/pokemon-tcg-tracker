@@ -3,15 +3,14 @@ services:
     build:
       context: .
       dockerfile: ./.docker/frontend/Dockerfile
-    container_name: docker-next
     depends_on: [db]
-    command: ["npm", "run", "dev"]
-    #command: ["tail", "-f", "/dev/null"]
+    entrypoint: dockerize -wait tcp://db:5432 -timeout 40s /home/node/.docker/frontend/entrypoint.sh
     ports:
       - "3000:3000"
       - "5555:5555"
     volumes:
       - ./frontend:/home/node/app
+      - ./.docker:/home/node/.docker
   db:
     image: postgres:17.2
     restart: always
