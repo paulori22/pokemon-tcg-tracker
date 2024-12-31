@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { CreateAxiosDefaults } from "axios";
 // In order this to work at vercel
 // Set NEXT_PUBLIC_URL for production with the custom domain at vercel site
 export const getBaseUrl = () => {
@@ -21,8 +21,14 @@ export const getBaseApiUrl = () => {
   return `${baseUrl}/api`;
 };
 
-export const api = axios.create({
+const baseAxiosConfig: CreateAxiosDefaults = {
   baseURL: getBaseApiUrl(),
-});
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+};
+
+export const api = axios.create(baseAxiosConfig);
 
 export const BASE_URL = getBaseUrl();
