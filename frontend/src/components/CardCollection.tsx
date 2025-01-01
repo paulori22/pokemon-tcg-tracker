@@ -1,7 +1,7 @@
 "use client";
 import PokemonCard from "@/components/PokemonCard";
 import { CardsActionKind, selectedCardsReducer } from "@/hooks/cardsReducer";
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useReducer } from "react";
 import { CardExpansionSetApiResponse } from "../app/api/card-expansion-set/route";
 import { api } from "@/lib/http";
 import { CardApiResponse } from "@/app/api/my-collection/route";

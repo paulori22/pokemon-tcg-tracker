@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { MinusCircleIcon } from "@heroicons/react/24/solid";
 import { ActionDispatch } from "react";
 import { Action, CardsActionKind } from "@/hooks/cardsReducer";
 import { CardResponse } from "@/app/api/my-collection/route";
