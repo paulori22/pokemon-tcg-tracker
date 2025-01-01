@@ -64,8 +64,8 @@ export async function GET(req: NextRequest) {
     },
     where: {
       OR: [
-        { name: { contains: params.filter.name } },
-        { id: { contains: params.filter.name } },
+        { name: { contains: params.filter.name, mode: "insensitive" } },
+        { id: { contains: params.filter.name, mode: "insensitive" } },
       ],
       cardBoosters: {
         some: {
