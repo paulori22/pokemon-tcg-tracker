@@ -5,6 +5,7 @@ import { useEffect, useReducer } from "react";
 import { CardExpansionSetApiResponse } from "../app/api/card-expansion-set/route";
 import { api } from "@/lib/http";
 import { CardApiResponse } from "@/app/api/my-collection/route";
+import { toast } from "sonner";
 
 const getUserCards = async (
   expansionSetCode: CardExpansionSetApiResponse[0]["code"]
@@ -41,7 +42,9 @@ export default function CardCollection({
         return { cardId: id, quantity };
       });
 
-    await api.post("my-collection", submitData);
+    api.post("my-collection", submitData).then(() => {
+      toast.success("My collection data saved sucessfully!");
+    });
   };
 
   return (
