@@ -1,18 +1,20 @@
 "use client";
 import PokemonCard from "@/components/PokemonCard";
 import { CardsActionKind, selectedCardsReducer } from "@/hooks/cardsReducer";
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { CardExpansionSetApiResponse } from "../app/api/card-expansion-set/route";
 import { api } from "@/lib/http";
 import { CardApiResponse } from "@/app/api/my-collection/route";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
+import FilterForm, { FilterFormType } from "./my-collection/FilterForm";
 
 const getUserCards = async (
-  expansionSetCode: CardExpansionSetApiResponse[0]["code"]
+  expansionSetCode: CardExpansionSetApiResponse[0]["code"],
+  filter?: FilterFormType
 ) => {
   const response = await api.get<CardApiResponse>("my-collection", {
-    params: { expansionSetCode },
+    params: { expansionSetCode, filter },
   });
   if (!response.status) {
     throw new Error("Failed to fetch user data");
@@ -27,13 +29,13 @@ export default function CardCollection({
 }: CardCollectionProps) {
   const [cards, dispatch] = useReducer(selectedCardsReducer, []);
 
-  useEffect(() => {
-    async function fetchData() {
-      const data = await getUserCards(expansionSetCode);
+  const fetchData = useCallback(
+    async (filter?: FilterFormType) => {
+      const data = await getUserCards(expansionSetCode, filter);
       dispatch({ type: CardsActionKind.SET_STATE, payload: data });
-    }
-    fetchData();
-  }, [expansionSetCode]);
+    },
+    [expansionSetCode]
+  );
 
   const handleSubmit = async () => {
     const submitData = cards
@@ -48,6 +50,10 @@ export default function CardCollection({
     });
   };
 
+  const onSubmitFilter = (formData: FilterFormType) => {
+    fetchData(formData);
+  };
+
   return (
     <div
       className="
@@ -58,9 +64,7 @@ export default function CardCollection({
         font-[family-name:var(--font-geist-sans)]"
     >
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <div>
-          <input type="text" name="search" placeholder="Search by name" />
-        </div>
+        <FilterForm onSubmit={onSubmitFilter} />
         <div className="flex gap-2 items-center flex-wrap flex-row">
           {cards.map((pokemonCard) => {
             return (

@@ -2,6 +2,8 @@ import { Card, Prisma, UsersOnCards } from "@prisma/client";
 import { prisma } from "../../../../lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
+import QueryString from "qs";
+import { FilterFormType } from "@/components/my-collection/FilterForm";
 
 export type CardResponse = Prisma.CardGetPayload<{
   select: {
@@ -25,6 +27,8 @@ export type CardResponse = Prisma.CardGetPayload<{
 
 export type CardApiResponse = CardResponse[];
 
+type ParamsType = { expansionSetCode: string; filter: FilterFormType };
+
 export async function GET(req: NextRequest) {
   const { userId } = await auth();
 
@@ -32,9 +36,9 @@ export async function GET(req: NextRequest) {
     return new Response("User is not signed in.", { status: 401 });
   }
 
-  const expansionSetCode = req.nextUrl.searchParams.get(
-    "expansionSetCode"
-  ) as string;
+  const params = QueryString.parse(
+    req.nextUrl.search.replaceAll("?", "")
+  ) as ParamsType;
 
   const cards = await prisma.card.findMany({
     select: {
@@ -59,10 +63,14 @@ export async function GET(req: NextRequest) {
       },
     },
     where: {
+      OR: [
+        { name: { contains: params.filter.name } },
+        { id: { contains: params.filter.name } },
+      ],
       cardBoosters: {
         some: {
           cardExpasionSet: {
-            code: expansionSetCode,
+            code: params.expansionSetCode,
           },
         },
       },
