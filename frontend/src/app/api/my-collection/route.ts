@@ -36,9 +36,9 @@ export async function GET(req: NextRequest) {
     return new Response("User is not signed in.", { status: 401 });
   }
 
-  const params = QueryString.parse(
-    req.nextUrl.search.replaceAll("?", "")
-  ) as ParamsType;
+  const params = QueryString.parse(req.nextUrl.search, {
+    ignoreQueryPrefix: true,
+  }) as ParamsType;
 
   const cards = await prisma.card.findMany({
     select: {
