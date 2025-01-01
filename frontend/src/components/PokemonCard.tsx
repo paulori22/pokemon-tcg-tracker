@@ -5,6 +5,7 @@ import { Action, CardsActionKind } from "@/hooks/cardsReducer";
 import { CardResponse } from "@/app/api/my-collection/route";
 import { zeroPad } from "@/lib/utils";
 import { Button } from "./ui/button";
+import { MinusCircle } from "lucide-react";
 
 export interface PokemonCardProps {
   pokemonCard: CardResponse;
@@ -30,7 +31,9 @@ export default function PokemonCard({
     >
       <div className="relative flex flex-col items-center">
         <Button
-          className="z-10 absolute top-0 left-0 invisible group-hover:visible"
+          variant={"outline"}
+          size={"icon"}
+          className="z-10 absolute top-0 left-0 invisible group-hover:visible rounded-2xl size-8"
           onClick={(e) => {
             e.stopPropagation();
             dispatch({
@@ -39,7 +42,8 @@ export default function PokemonCard({
             });
           }}
         >
-          <MinusCircleIcon className="size-6" />
+          {/* <MinusCircleIcon /> */}
+          <MinusCircle />
         </Button>
         <Image
           alt={pokemonCard.name}
