@@ -6,6 +6,7 @@ import { CardExpansionSetApiResponse } from "../app/api/card-expansion-set/route
 import { api } from "@/lib/http";
 import { CardApiResponse } from "@/app/api/my-collection/route";
 import { toast } from "sonner";
+import { Button } from "./ui/button";
 
 const getUserCards = async (
   expansionSetCode: CardExpansionSetApiResponse[0]["code"]
@@ -72,15 +73,15 @@ export default function CardCollection({
           })}
         </div>
         <div className="flex flex-row gap-2 fixed bottom-4 right-4">
-          <button
+          <Button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg"
             onClick={handleSubmit}
           >
             Save
-          </button>
-          <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-lg">
+          </Button>
+          <Button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-lg">
             Reset
-          </button>
+          </Button>
         </div>
       </main>
     </div>

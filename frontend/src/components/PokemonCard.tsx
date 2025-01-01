@@ -4,6 +4,7 @@ import { ActionDispatch } from "react";
 import { Action, CardsActionKind } from "@/hooks/cardsReducer";
 import { CardResponse } from "@/app/api/my-collection/route";
 import { zeroPad } from "@/lib/utils";
+import { Button } from "./ui/button";
 
 export interface PokemonCardProps {
   pokemonCard: CardResponse;
@@ -28,7 +29,7 @@ export default function PokemonCard({
       }
     >
       <div className="relative flex flex-col items-center">
-        <button
+        <Button
           className="z-10 absolute top-0 left-0 invisible group-hover:visible"
           onClick={(e) => {
             e.stopPropagation();
@@ -39,7 +40,7 @@ export default function PokemonCard({
           }}
         >
           <MinusCircleIcon className="size-6" />
-        </button>
+        </Button>
         <Image
           alt={pokemonCard.name}
           src={pokemonCard.imagePath}
