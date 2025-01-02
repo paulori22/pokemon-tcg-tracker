@@ -26,7 +26,7 @@ export type Action =
 
 export function selectedCardsReducer(state: CardResponse[], action: Action) {
   const { type, payload } = action;
-  console.log({ state, type, payload });
+
   switch (type) {
     case CardsActionKind.INCREASE: {
       const newState = state.map((c) => {
