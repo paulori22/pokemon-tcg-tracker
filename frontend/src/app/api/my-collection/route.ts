@@ -40,7 +40,12 @@ export async function GET(req: NextRequest) {
     ignoreQueryPrefix: true,
   }) as ParamsType;
 
-  console.log({ params, req: req.nextUrl.search, nextUrl: req.nextUrl });
+  //if filter[name] is empty in production the filter param is not defined
+  const searchName = params.filter
+    ? params.filter.name
+      ? params.filter.name
+      : ""
+    : "";
 
   const cards = await prisma.card.findMany({
     select: {
@@ -66,8 +71,8 @@ export async function GET(req: NextRequest) {
     },
     where: {
       OR: [
-        { name: { contains: params.filter.name, mode: "insensitive" } },
-        { id: { contains: params.filter.name, mode: "insensitive" } },
+        { name: { contains: searchName, mode: "insensitive" } },
+        { id: { contains: searchName, mode: "insensitive" } },
       ],
       cardBoosters: {
         some: {

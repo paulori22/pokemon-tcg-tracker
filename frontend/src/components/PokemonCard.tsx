@@ -41,7 +41,6 @@ export default function PokemonCard({
             });
           }}
         >
-          {/* <MinusCircleIcon /> */}
           <MinusCircle />
         </Button>
         <Image
