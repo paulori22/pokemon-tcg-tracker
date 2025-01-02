@@ -16,9 +16,8 @@ import { api } from "@/lib/http";
 dayjs.extend(localizedFormat);
 
 export default async function Page() {
-  const response = await api.get<CardExpansionSetApiResponse>(
-    "card-expansion-set"
-  );
+  const response =
+    await api.get<CardExpansionSetApiResponse>("card-expansion-set");
   const cardExpansionSets = response.data;
 
   return (

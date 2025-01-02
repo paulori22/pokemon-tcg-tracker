@@ -36,7 +36,7 @@ export default function ExpansionBoosterInfo({
           <div>{progress.toFixed(2)}%</div>
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-row flex-wrap gap-2 justify-center">
+      <CardContent className="flex flex-row flex-wrap justify-center gap-2">
         {cardBoosters.map((booster) => {
           return (
             <BoosterInfo

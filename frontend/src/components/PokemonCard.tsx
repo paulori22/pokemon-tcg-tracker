@@ -18,9 +18,7 @@ export default function PokemonCard({
   const isCardSelected = pokemonCard.quantity > 0;
   return (
     <div
-      className={`group max-w-sm hover:cursor-pointer
-         ${isCardSelected ? "" : "opacity-25"}
-        bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700`}
+      className={`group max-w-sm hover:cursor-pointer ${isCardSelected ? "" : "opacity-25"} rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800`}
       onClick={() =>
         dispatch({
           type: CardsActionKind.INCREASE,
@@ -32,7 +30,7 @@ export default function PokemonCard({
         <Button
           variant={"outline"}
           size={"icon"}
-          className="z-10 absolute top-0 left-0 invisible group-hover:visible rounded-2xl size-8"
+          className="invisible absolute left-0 top-0 z-10 size-8 rounded-2xl group-hover:visible"
           onClick={(e) => {
             e.stopPropagation();
             dispatch({
@@ -64,20 +62,11 @@ export default function PokemonCard({
               payload: pokemonCard,
             });
           }}
-          className="
-            max-w-14
-            max-h-4
-            absolute bottom-0 left-0 invisible group-hover:visible
-          bg-gray-50 border border-gray-300 text-gray-900 
-            text-sm rounded-lg focus:ring-blue-500
-          focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700
-          dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-          dark:focus:ring-blue-500 dark:focus:border-blue-500
-           "
+          className="invisible absolute bottom-0 left-0 block max-h-4 w-full max-w-14 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 group-hover:visible dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
         />
       </div>
-      <div className="p-1 flex flex-col items-center">
-        <p className="mb-1 text-1xl font-bold tracking-tight text-gray-900 dark:text-white">
+      <div className="flex flex-col items-center p-1">
+        <p className="text-1xl mb-1 font-bold tracking-tight text-gray-900 dark:text-white">
           {pokemonCard.name}
         </p>
         <p className="mb-1 font-normal text-gray-700 dark:text-gray-400">

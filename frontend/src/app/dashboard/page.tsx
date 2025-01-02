@@ -11,7 +11,7 @@ export default async function Dashboard() {
   });
   const dashboardData = response.data;
   return (
-    <div className="flex flex-row flex-wrap gap-4 items-center">
+    <div className="flex flex-row flex-wrap items-center gap-4">
       {dashboardData.map((d) => {
         return (
           <ExpansionBoosterInfo

@@ -16,7 +16,7 @@ export default function BoosterInfo({
 }: BoosterInfoProps) {
   const progress = (ownedCards * 100) / totalCards;
   return (
-    <div className="flex flex-col flex-wrap gap-2 items-center">
+    <div className="flex flex-col flex-wrap items-center gap-2">
       <Image alt="logo" src={imagePath} width={200} height={200} />
       <div>
         {ownedCards} of {totalCards} cards
