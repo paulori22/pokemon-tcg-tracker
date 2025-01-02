@@ -40,6 +40,8 @@ export async function GET(req: NextRequest) {
     ignoreQueryPrefix: true,
   }) as ParamsType;
 
+  console.log({ params, req: req.nextUrl.search, nextUrl: req.nextUrl });
+
   const cards = await prisma.card.findMany({
     select: {
       id: true,
