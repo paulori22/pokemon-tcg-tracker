@@ -1,7 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -14,23 +13,22 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
 
-const formSchema = z.object({
+export const formSchema = z.object({
   name: z.string(),
+  max5Cards: z.boolean(),
 });
 
 export type FilterFormType = z.infer<typeof formSchema>;
 
 export interface FilterFormProps {
+  form: UseFormReturn<FilterFormType>;
   onSubmit: (formData: FilterFormType) => void;
 }
 
-export default function FilterForm({ onSubmit }: FilterFormProps) {
-  const form = useForm<FilterFormType>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { name: "" },
-  });
-
+export default function FilterForm({ form, onSubmit }: FilterFormProps) {
   useEffect(() => {
     form.handleSubmit(onSubmit)();
   }, []);
@@ -53,6 +51,23 @@ export default function FilterForm({ onSubmit }: FilterFormProps) {
             </FormItem>
           )}
         />
+        <div className="flex items-center space-x-2">
+          <FormField
+            control={form.control}
+            name="max5Cards"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Switch
+                    onCheckedChange={(checked) => field.onChange(checked)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Label htmlFor="max5Cards">5 cards per row</Label>
+        </div>
         <Button type="submit">Submit</Button>
       </form>
     </Form>

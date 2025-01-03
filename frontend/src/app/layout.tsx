@@ -40,8 +40,8 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-4 p-4 font-[family-name:var(--font-geist-sans)]">
-              <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
+            <div className="flex min-h-screen flex-col items-center justify-center justify-items-center gap-4 p-4 font-[family-name:var(--font-geist-sans)]">
+              <main className="flex flex-col items-center justify-center justify-items-center gap-8">
                 {children}
               </main>
               <Toaster position="top-center" richColors closeButton />

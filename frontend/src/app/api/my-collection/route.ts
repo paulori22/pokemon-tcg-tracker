@@ -122,8 +122,8 @@ export async function POST(req: Request) {
         },
         update: { quantity: userCard.quantity },
         create: { ...userCard },
-      })
-    )
+      }),
+    ),
   );
   return Response.json(body);
 }

@@ -7,11 +7,16 @@ import { api } from "@/lib/http";
 import { CardApiResponse } from "@/app/api/my-collection/route";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
-import FilterForm, { FilterFormType } from "./my-collection/FilterForm";
+import FilterForm, {
+  FilterFormType,
+  formSchema,
+} from "./my-collection/FilterForm";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const getUserCards = async (
   expansionSetCode: CardExpansionSetApiResponse[0]["code"],
-  filter?: FilterFormType
+  filter?: FilterFormType,
 ) => {
   const response = await api.get<CardApiResponse>("my-collection", {
     params: { expansionSetCode, filter },
@@ -24,6 +29,7 @@ const getUserCards = async (
 export interface CardCollectionProps {
   expansionSetCode: CardExpansionSetApiResponse[0]["code"];
 }
+
 export default function CardCollection({
   expansionSetCode,
 }: CardCollectionProps) {
@@ -34,7 +40,7 @@ export default function CardCollection({
       const data = await getUserCards(expansionSetCode, filter);
       dispatch({ type: CardsActionKind.SET_STATE, payload: data });
     },
-    [expansionSetCode]
+    [expansionSetCode],
   );
 
   const handleSubmit = async () => {
@@ -50,44 +56,51 @@ export default function CardCollection({
     });
   };
 
+  const form = useForm<FilterFormType>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { name: "", max5Cards: false },
+  });
+
   const onSubmitFilter = (formData: FilterFormType) => {
     fetchData(formData);
   };
 
+  const max5Cards = form.watch("max5Cards");
+
   return (
-    <div
-      className="
-        grid grid-rows-[20px_1fr_20px] items-center justify-items-center 
-        min-h-screen
-        p-4
-        gap-4
-        font-[family-name:var(--font-geist-sans)]"
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <FilterForm onSubmit={onSubmitFilter} />
-        <div className="flex gap-2 items-center flex-wrap flex-row">
-          {cards.map((pokemonCard) => {
-            return (
-              <PokemonCard
-                key={pokemonCard.id}
-                dispatch={dispatch}
-                pokemonCard={pokemonCard}
-              />
-            );
-          })}
-        </div>
-        <div className="flex flex-row gap-2 fixed bottom-4 right-4">
-          <Button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg"
-            onClick={handleSubmit}
-          >
-            Save
-          </Button>
-          <Button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-lg">
-            Reset
-          </Button>
-        </div>
-      </main>
-    </div>
+    <>
+      <FilterForm form={form} onSubmit={onSubmitFilter} />
+      <div
+        className={
+          max5Cards
+            ? "grid grid-cols-5 gap-2"
+            : "flex flex-row flex-wrap items-center justify-center justify-items-center gap-2"
+        }
+      >
+        {cards.map((pokemonCard) => {
+          return (
+            <PokemonCard
+              key={pokemonCard.id}
+              dispatch={dispatch}
+              pokemonCard={pokemonCard}
+              // Need to pass to rerender the memo component when the quantity change,
+              // not sure why the pokemonCard prop do not cause the rerender
+              quantity={pokemonCard.quantity}
+            />
+          );
+        })}
+      </div>
+      <div className="fixed bottom-4 right-4 flex flex-row gap-2">
+        <Button
+          className="rounded-full bg-blue-500 px-4 py-2 font-bold text-white shadow-lg hover:bg-blue-600"
+          onClick={handleSubmit}
+        >
+          Save
+        </Button>
+        <Button className="rounded-full bg-red-500 px-4 py-2 font-bold text-white shadow-lg hover:bg-red-600">
+          Reset
+        </Button>
+      </div>
+    </>
   );
 }

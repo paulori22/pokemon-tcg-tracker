@@ -21,7 +21,7 @@ export default async function Page() {
   const cardExpansionSets = response.data;
 
   return (
-    <div className="flex flex-row flex-wrap gap-4">
+    <div className="flex flex-row flex-wrap items-center justify-center justify-items-center gap-4">
       {cardExpansionSets.map((expansionSet) => {
         const releaseDate = dayjs(expansionSet.releasedAt);
         return (
