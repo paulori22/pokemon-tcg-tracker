@@ -1,7 +1,7 @@
 "use client";
 import PokemonCard from "@/components/PokemonCard";
 import { CardsActionKind, selectedCardsReducer } from "@/hooks/cardsReducer";
-import { useCallback, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { CardExpansionSetApiResponse } from "../app/api/card-expansion-set/route";
 import { api } from "@/lib/http";
 import { CardApiResponse } from "@/app/api/my-collection/route";
@@ -61,9 +61,16 @@ export default function CardCollection({
     defaultValues: { name: "", max5Cards: false },
   });
 
-  const onSubmitFilter = (formData: FilterFormType) => {
-    fetchData(formData);
-  };
+  const onSubmitFilter = useCallback(
+    (formData: FilterFormType) => {
+      fetchData(formData);
+    },
+    [fetchData],
+  );
+
+  useEffect(() => {
+    form.handleSubmit(onSubmitFilter)();
+  }, [form, onSubmitFilter]);
 
   const max5Cards = form.watch("max5Cards");
 

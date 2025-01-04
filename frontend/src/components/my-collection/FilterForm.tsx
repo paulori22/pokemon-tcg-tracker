@@ -29,10 +29,6 @@ export interface FilterFormProps {
 }
 
 export default function FilterForm({ form, onSubmit }: FilterFormProps) {
-  useEffect(() => {
-    form.handleSubmit(onSubmit)();
-  }, []);
-
   return (
     <Form {...form}>
       <form
