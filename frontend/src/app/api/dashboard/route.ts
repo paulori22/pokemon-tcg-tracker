@@ -30,6 +30,35 @@ export async function GET() {
     return new Response("User is not signed in.", { status: 401 });
   }
 
+  /*   const result = await prisma.$queryRaw<
+    test[]
+  >`SELECT * FROM "_CardToCardBooster"`;
+  const rowsToInsert = [];
+  for (let index = 0; index < result.length; index++) {
+    const row = result[index];
+    const card = await prisma.card.findFirstOrThrow({ where: { id: row.A } });
+    const insertRow = {
+      cardBoosterId: row.B,
+      cardId: card.id,
+      numberInExpasionSet: card.numberInExpasionSet,
+    };
+    rowsToInsert.push(insertRow);
+  }
+  const records = await prisma.cardOnCardBooster.createManyAndReturn({
+    data: rowsToInsert,
+  }); */
+  /*   try {
+    const result = await prisma.$queryRaw`SELECT * FROM "Card"`;
+    console.log(result);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.stack);
+      console.error("Failed to create content interaction:", error);
+    }
+    console.error("Failed to create content interaction:", error);
+    throw new Error("Failed to record your interaction. Please try again.");
+  } */
+
   const cardExpansionSets = await prisma.cardExpasionSet.findMany({
     include: {
       cardBoosters: {
@@ -37,15 +66,19 @@ export async function GET() {
           _count: {
             select: {
               cards: {
-                where: { userCards: { some: { userId } } },
+                where: { card: { userCards: { some: { userId } } } },
               },
             },
           },
           cards: {
             select: {
-              id: true,
-              name: true,
-              rarity: true,
+              card: {
+                select: {
+                  id: true,
+                  name: true,
+                  rarity: true,
+                },
+              },
             },
             orderBy: { numberInExpasionSet: "asc" },
           },

@@ -15,12 +15,20 @@ export type CardResponse = Prisma.CardGetPayload<{
     imagePath: true;
     cardBoosters: {
       select: {
-        id: true;
-        name: true;
-        cardExpasionSet: {
-          select: { id: true; code: true; name: true; totalCards: true };
+        numberInExpasionSet: true;
+        cardBooster: {
+          select: {
+            id: true;
+            name: true;
+            cardExpasionSet: {
+              select: { id: true; code: true; name: true; totalCards: true };
+            };
+          };
         };
       };
+    };
+    userCards: {
+      select: { quantity: true };
     };
   };
 }> & { quantity: number };
@@ -57,11 +65,19 @@ export async function GET(req: NextRequest) {
       imagePath: true,
       cardBoosters: {
         select: {
-          id: true,
-          name: true,
-          cardExpasionSet: {
-            select: { id: true, code: true, name: true, totalCards: true },
+          numberInExpasionSet: true,
+          cardBooster: {
+            select: {
+              id: true,
+              name: true,
+              cardExpasionSet: {
+                select: { id: true, code: true, name: true, totalCards: true },
+              },
+            },
           },
+        },
+        where: {
+          cardBooster: { cardExpasionSet: { code: params.expansionSetCode } },
         },
       },
       userCards: {
@@ -76,14 +92,15 @@ export async function GET(req: NextRequest) {
       ],
       cardBoosters: {
         some: {
-          cardExpasionSet: {
-            code: params.expansionSetCode,
+          cardBooster: {
+            cardExpasionSet: {
+              cardBoosters: {
+                some: { cardExpasionSet: { code: params.expansionSetCode } },
+              },
+            },
           },
         },
       },
-    },
-    orderBy: {
-      numberInExpasionSet: "asc",
     },
   });
 
@@ -93,7 +110,14 @@ export async function GET(req: NextRequest) {
     return { ...rest, quantity };
   });
 
-  return Response.json(result);
+  const orderedByResult = result.sort((a, b) => {
+    return (
+      a.cardBoosters[0].numberInExpasionSet -
+      b.cardBoosters[0].numberInExpasionSet
+    );
+  });
+
+  return Response.json(orderedByResult);
 }
 
 type CardDTO = {

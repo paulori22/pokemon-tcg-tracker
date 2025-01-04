@@ -18,24 +18,34 @@ model CardExpasionSet {
 }
 
 model CardBooster {
-    id                Int             @id @default(autoincrement())
+    id                Int                 @id @default(autoincrement())
     cardExpasionSetId Int
-    cardExpasionSet   CardExpasionSet @relation(fields: [cardExpasionSetId], references: [id])
-    name              String          @unique
-    releasedAt        DateTime?       @db.Date
+    cardExpasionSet   CardExpasionSet     @relation(fields: [cardExpasionSetId], references: [id])
+    name              String              @unique
+    releasedAt        DateTime?           @db.Date
     imagePath         String?
-    cards             Card[]
+    cards             CardOnCardBooster[]
 }
 
 model Card {
-    id                  String         @id
+    id                  String              @id
     numberInExpasionSet Int
     name                String
     type                CardType
     rarity              CardRarity
     imagePath           String
-    cardBoosters        CardBooster[]
     userCards           UsersOnCards[]
+    cardBoosters        CardOnCardBooster[]
+}
+
+model CardOnCardBooster {
+    cardBoosterId       Int
+    cardBooster         CardBooster @relation(fields: [cardBoosterId], references: [id])
+    cardId              String
+    card                Card        @relation(fields: [cardId], references: [id])
+    numberInExpasionSet Int
+
+    @@id([cardBoosterId, cardId])
 }
 
 model UsersOnCards {
