@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
 
   const params = QueryString.parse(req.nextUrl.search, {
     ignoreQueryPrefix: true,
-  }) as ParamsType;
+  }) as unknown as ParamsType;
 
   //if filter[name] is empty in production the filter param is not defined
   const searchName = params.filter
