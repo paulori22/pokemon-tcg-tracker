@@ -29,9 +29,17 @@ export async function GET() {
   if (!userId) {
     return new Response("User is not signed in.", { status: 401 });
   }
-
   const cardExpansionSets = await prisma.cardExpasionSet.findMany({
     include: {
+      _count: {
+        select: {
+          cards: {
+            where: {
+              card: { userCards: { some: { userId } } },
+            },
+          },
+        },
+      },
       cardBoosters: {
         include: {
           _count: {
@@ -59,7 +67,7 @@ export async function GET() {
   });
 
   const result = cardExpansionSets.map((cardExpansionSet) => {
-    const { cardBoosters, ...rest } = cardExpansionSet;
+    const { cardBoosters, _count, ...rest } = cardExpansionSet;
     const newCardBooster = cardBoosters.map((cardBooster) => {
       const { _count, cards, ...restCardBooster } = cardBooster;
       return {
@@ -71,9 +79,7 @@ export async function GET() {
 
     return {
       ...rest,
-      totalOwned: newCardBooster.reduce((prevVal, currentVal) => {
-        return prevVal + currentVal.totalOwned;
-      }, 0),
+      totalOwned: _count.cards,
       cardBoosters: newCardBooster,
     };
   });
