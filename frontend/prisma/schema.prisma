@@ -8,13 +8,14 @@ generator client {
 }
 
 model CardExpasionSet {
-    id           Int           @id @default(autoincrement())
-    code         String        @unique
-    name         String        @unique
+    id           Int                      @id @default(autoincrement())
+    code         String                   @unique
+    name         String                   @unique
     totalCards   Int
     releasedAt   DateTime?
     imagePath    String?
     cardBoosters CardBooster[]
+    cards        CardOnCardExpansionSet[]
 }
 
 model CardBooster {
@@ -28,24 +29,33 @@ model CardBooster {
 }
 
 model Card {
-    id                  String              @id
-    numberInExpasionSet Int
-    name                String
-    type                CardType
-    rarity              CardRarity
-    imagePath           String
-    userCards           UsersOnCards[]
-    cardBoosters        CardOnCardBooster[]
+    id               String                   @id
+    name             String
+    type             CardType
+    rarity           CardRarity
+    imagePath        String
+    userCards        UsersOnCards[]
+    cardBoosters     CardOnCardBooster[]
+    cardExpasionSets CardOnCardExpansionSet[]
 }
 
 model CardOnCardBooster {
-    cardBoosterId       Int
-    cardBooster         CardBooster @relation(fields: [cardBoosterId], references: [id])
-    cardId              String
-    card                Card        @relation(fields: [cardId], references: [id])
-    numberInExpasionSet Int
+    cardBoosterId Int
+    cardBooster   CardBooster @relation(fields: [cardBoosterId], references: [id])
+    cardId        String
+    card          Card        @relation(fields: [cardId], references: [id])
 
     @@id([cardBoosterId, cardId])
+}
+
+model CardOnCardExpansionSet {
+    cardExpasionSetId   Int
+    cardExpasionSet     CardExpasionSet @relation(fields: [cardExpasionSetId], references: [id])
+    cardId              String
+    card                Card            @relation(fields: [cardId], references: [id])
+    numberInExpasionSet Int
+
+    @@id([cardExpasionSetId, cardId])
 }
 
 model UsersOnCards {

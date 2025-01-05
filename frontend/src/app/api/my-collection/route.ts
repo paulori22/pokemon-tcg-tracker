@@ -9,13 +9,17 @@ export type CardResponse = Prisma.CardGetPayload<{
   select: {
     id: true;
     name: true;
-    numberInExpasionSet: true;
     rarity: true;
     type: true;
     imagePath: true;
-    cardBoosters: {
+    cardExpasionSets: {
       select: {
         numberInExpasionSet: true;
+        cardExpasionSet: true;
+      };
+    };
+    cardBoosters: {
+      select: {
         cardBooster: {
           select: {
             id: true;
@@ -59,13 +63,20 @@ export async function GET(req: NextRequest) {
     select: {
       id: true,
       name: true,
-      numberInExpasionSet: true,
       rarity: true,
       type: true,
       imagePath: true,
-      cardBoosters: {
+      cardExpasionSets: {
         select: {
           numberInExpasionSet: true,
+          cardExpasionSet: true,
+        },
+        where: {
+          cardExpasionSet: { code: params.expansionSetCode },
+        },
+      },
+      cardBoosters: {
+        select: {
           cardBooster: {
             select: {
               id: true,
@@ -90,16 +101,8 @@ export async function GET(req: NextRequest) {
         { name: { contains: searchName, mode: "insensitive" } },
         { id: { contains: searchName, mode: "insensitive" } },
       ],
-      cardBoosters: {
-        some: {
-          cardBooster: {
-            cardExpasionSet: {
-              cardBoosters: {
-                some: { cardExpasionSet: { code: params.expansionSetCode } },
-              },
-            },
-          },
-        },
+      cardExpasionSets: {
+        some: { cardExpasionSet: { code: params.expansionSetCode } },
       },
     },
   });
@@ -112,8 +115,8 @@ export async function GET(req: NextRequest) {
 
   const orderedByResult = result.sort((a, b) => {
     return (
-      a.cardBoosters[0].numberInExpasionSet -
-      b.cardBoosters[0].numberInExpasionSet
+      a.cardExpasionSets[0].numberInExpasionSet -
+      b.cardExpasionSets[0].numberInExpasionSet
     );
   });
 

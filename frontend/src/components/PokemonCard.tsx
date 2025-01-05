@@ -57,8 +57,8 @@ export default memo(function PokemonCard({
             {pokemonCard.name}
           </p>
           <p className="truncate font-normal text-gray-700 dark:text-gray-400">
-            {pokemonCard.cardBoosters[0].cardBooster.cardExpasionSet.code}{" "}
-            {zeroPad(pokemonCard.cardBoosters[0].numberInExpasionSet, 3)}
+            {pokemonCard.cardExpasionSets[0].cardExpasionSet.code}{" "}
+            {zeroPad(pokemonCard.cardExpasionSets[0].numberInExpasionSet, 3)}
           </p>
         </CardDescription>
       </CardHeader>

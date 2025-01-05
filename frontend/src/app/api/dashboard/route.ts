@@ -51,7 +51,6 @@ export async function GET() {
                 },
               },
             },
-            orderBy: { numberInExpasionSet: "asc" },
           },
         },
       },
