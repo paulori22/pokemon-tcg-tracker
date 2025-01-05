@@ -49,17 +49,6 @@ export async function GET() {
               },
             },
           },
-          cards: {
-            select: {
-              card: {
-                select: {
-                  id: true,
-                  name: true,
-                  rarity: true,
-                },
-              },
-            },
-          },
         },
       },
     },
@@ -69,11 +58,10 @@ export async function GET() {
   const result = cardExpansionSets.map((cardExpansionSet) => {
     const { cardBoosters, _count, ...rest } = cardExpansionSet;
     const newCardBooster = cardBoosters.map((cardBooster) => {
-      const { _count, cards, ...restCardBooster } = cardBooster;
+      const { _count, ...restCardBooster } = cardBooster;
       return {
         ...restCardBooster,
         totalOwned: _count.cards,
-        totalCards: cards.length,
       };
     });
 
