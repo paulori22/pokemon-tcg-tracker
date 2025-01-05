@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "validationProd": "next lint && tsc",
+    "validateProd": "next lint && tsc",
     "postinstall": "prisma generate && prisma migrate deploy"
   },
   "dependencies": {
