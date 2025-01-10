@@ -44,12 +44,10 @@ export default function CardCollection({
   );
 
   const handleSubmit = async () => {
-    const submitData = cards
-      .filter((c) => c.quantity > 0)
-      .map((c) => {
-        const { id, quantity } = c;
-        return { cardId: id, quantity };
-      });
+    const submitData = cards.map((c) => {
+      const { id, quantity } = c;
+      return { cardId: id, quantity };
+    });
 
     api.post("my-collection", submitData).then(() => {
       toast.success("My collection data saved sucessfully!");
