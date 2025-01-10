@@ -12,14 +12,15 @@ export default async function Dashboard() {
   const dashboardData = response.data;
   return (
     <div className="flex flex-row flex-wrap items-center justify-center gap-4">
-      {dashboardData.map((d) => {
+      {dashboardData.expansionsSets.map((expansionSet) => {
         return (
           <ExpansionBoosterInfo
-            key={d.id}
-            imagePath={d.imagePath}
-            ownedCards={d.totalOwned}
-            totalCards={d.totalCards}
-            cardBoosters={d.cardBoosters}
+            key={expansionSet.id}
+            imagePath={expansionSet.imagePath}
+            ownedCards={expansionSet.totalOwned}
+            totalCards={expansionSet.totalCards}
+            cardBoosters={expansionSet.cardBoosters}
+            higherPullChanceBoosterId={dashboardData.higherPullChanceBoosterId}
           />
         );
       })}

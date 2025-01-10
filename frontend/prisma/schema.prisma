@@ -29,14 +29,17 @@ model CardBooster {
 }
 
 model Card {
-    id               String                   @id
-    name             String
-    type             CardType
-    rarity           CardRarity
-    imagePath        String
-    userCards        UsersOnCards[]
-    cardBoosters     CardOnCardBooster[]
-    cardExpasionSets CardOnCardExpansionSet[]
+    id                   String                   @id
+    name                 String
+    type                 CardType
+    rarity               CardRarity
+    imagePath            String
+    firstThirdPullChance Float?
+    fourthPullChance     Float?
+    fifthPullChance      Float?
+    userCards            UsersOnCards[]
+    cardBoosters         CardOnCardBooster[]
+    cardExpasionSets     CardOnCardExpansionSet[]
 }
 
 model CardOnCardBooster {

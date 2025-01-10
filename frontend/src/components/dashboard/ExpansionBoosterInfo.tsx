@@ -7,13 +7,15 @@ import {
 import Image from "next/image";
 import BoosterInfo from "./BoosterInfo";
 import { Progress } from "../ui/progress";
-import { DashboardApiItemResponse } from "@/app/api/dashboard/route";
+import { ExpansionSetDashboardApiResponse } from "@/app/api/dashboard/route";
+import { roundNumber } from "@/lib/utils";
 
 export interface ExpansionBoosterInfoProps {
   imagePath: string;
   totalCards: number;
   ownedCards: number;
-  cardBoosters: DashboardApiItemResponse["cardBoosters"];
+  cardBoosters: ExpansionSetDashboardApiResponse["cardBoosters"];
+  higherPullChanceBoosterId: number;
 }
 
 export default function ExpansionBoosterInfo({
@@ -21,6 +23,7 @@ export default function ExpansionBoosterInfo({
   ownedCards,
   totalCards,
   cardBoosters,
+  higherPullChanceBoosterId,
 }: ExpansionBoosterInfoProps) {
   const progress = (ownedCards * 100) / totalCards;
 
@@ -33,7 +36,7 @@ export default function ExpansionBoosterInfo({
             {ownedCards} of {totalCards} cards
           </div>
           <Progress value={progress} />
-          <div>{progress.toFixed(2)}%</div>
+          <div>{roundNumber(progress, 2)}%</div>
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-row flex-wrap justify-center gap-2">
@@ -44,7 +47,8 @@ export default function ExpansionBoosterInfo({
               imagePath={booster.imagePath}
               ownedCards={booster.totalOwned}
               totalCards={booster.totalCards}
-              newCardChance={0}
+              newCardChance={booster.pullChanceStat.total}
+              higherPullChance={booster.id === higherPullChanceBoosterId}
             />
           );
         })}
