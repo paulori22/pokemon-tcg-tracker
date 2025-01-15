@@ -46,7 +46,7 @@ export async function GET() {
         select: {
           cards: {
             where: {
-              card: { userCards: { some: { userId } } },
+              card: { userCards: { some: { quantity: { gt: 0 } } } },
             },
           },
         },
