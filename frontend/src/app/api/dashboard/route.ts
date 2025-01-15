@@ -46,7 +46,10 @@ export async function GET() {
         select: {
           cards: {
             where: {
-              card: { userCards: { some: { quantity: { gt: 0 } } } },
+              AND: [
+                { card: { userCards: { some: { userId } } } },
+                { card: { userCards: { some: { quantity: { gt: 0 } } } } },
+              ],
             },
           },
         },
@@ -57,14 +60,24 @@ export async function GET() {
             select: {
               cards: {
                 where: {
-                  card: { userCards: { some: { quantity: { gt: 0 } } } },
+                  AND: [
+                    { card: { userCards: { some: { userId } } } },
+                    { card: { userCards: { some: { quantity: { gt: 0 } } } } },
+                  ],
                 },
               },
             },
           },
           cards: {
             include: {
-              card: { include: { userCards: { select: { quantity: true } } } },
+              card: {
+                include: {
+                  userCards: {
+                    select: { quantity: true },
+                    where: { card: { userCards: { some: { userId } } } },
+                  },
+                },
+              },
             },
           },
         },
