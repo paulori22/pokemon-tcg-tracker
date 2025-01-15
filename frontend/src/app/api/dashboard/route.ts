@@ -46,10 +46,9 @@ export async function GET() {
         select: {
           cards: {
             where: {
-              AND: [
-                { card: { userCards: { some: { userId } } } },
-                { card: { userCards: { some: { quantity: { gt: 0 } } } } },
-              ],
+              card: {
+                userCards: { some: { AND: [{ userId, quantity: { gt: 0 } }] } },
+              },
             },
           },
         },
@@ -60,10 +59,11 @@ export async function GET() {
             select: {
               cards: {
                 where: {
-                  AND: [
-                    { card: { userCards: { some: { userId } } } },
-                    { card: { userCards: { some: { quantity: { gt: 0 } } } } },
-                  ],
+                  card: {
+                    userCards: {
+                      some: { AND: [{ userId, quantity: { gt: 0 } }] },
+                    },
+                  },
                 },
               },
             },
@@ -74,7 +74,7 @@ export async function GET() {
                 include: {
                   userCards: {
                     select: { quantity: true },
-                    where: { card: { userCards: { some: { userId } } } },
+                    where: { userId },
                   },
                 },
               },
@@ -115,6 +115,8 @@ export async function GET() {
         ...restCardBooster,
         totalCards: cards.length,
         totalOwned: _count.cards,
+        missingCards,
+        cards,
         pullChanceStat: {
           firstThirdPullChance: firstThirdPullChanceBooster,
           fourthPullChance: fourthPullChanceBooster,
