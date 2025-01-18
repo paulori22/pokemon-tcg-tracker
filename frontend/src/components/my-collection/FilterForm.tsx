@@ -17,6 +17,7 @@ import { Label } from "../ui/label";
 export const formSchema = z.object({
   name: z.string(),
   max5Cards: z.boolean(),
+  onlyMissingCards: z.boolean(),
 });
 
 export type FilterFormType = z.infer<typeof formSchema>;
@@ -57,6 +58,23 @@ export default function FilterForm({ form }: FilterFormProps) {
             )}
           />
           <Label htmlFor="max5Cards">5 cards per row</Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <FormField
+            control={form.control}
+            name="onlyMissingCards"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Switch
+                    onCheckedChange={(checked) => field.onChange(checked)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Label htmlFor="max5Cards">Only Missing Cards</Label>
         </div>
       </form>
     </Form>

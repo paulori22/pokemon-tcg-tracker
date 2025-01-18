@@ -56,20 +56,24 @@ export default function CardCollection({
 
   const form = useForm<FilterFormType>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", max5Cards: false },
+    defaultValues: { name: "", max5Cards: false, onlyMissingCards: false },
   });
 
   const formData = form.watch();
 
-  const filteredCards = cards.filter((c) => {
-    if (
-      c.name.toLowerCase().includes(formData.name.toLowerCase()) ||
-      c.id.toLowerCase().includes(formData.name.toLowerCase())
-    ) {
-      return true;
-    }
-    return false;
-  });
+  const filteredCards = cards
+    .filter((c) => {
+      return formData.onlyMissingCards ? c.quantity === 0 : true;
+    })
+    .filter((c) => {
+      if (
+        c.name.toLowerCase().includes(formData.name.toLowerCase()) ||
+        c.id.toLowerCase().includes(formData.name.toLowerCase())
+      ) {
+        return true;
+      }
+      return false;
+    });
 
   useEffect(() => {
     fetchData();
