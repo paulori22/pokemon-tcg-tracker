@@ -3,7 +3,6 @@ import { prisma } from "../../../../lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import QueryString from "qs";
-import { FilterFormType } from "@/components/my-collection/FilterForm";
 
 export type CardResponse = Prisma.CardGetPayload<{
   select: {
@@ -39,7 +38,7 @@ export type CardResponse = Prisma.CardGetPayload<{
 
 export type CardApiResponse = CardResponse[];
 
-type ParamsType = { expansionSetCode: string; filter: FilterFormType };
+type ParamsType = { expansionSetCode: string };
 
 export async function GET(req: NextRequest) {
   const { userId } = await auth();
@@ -51,13 +50,6 @@ export async function GET(req: NextRequest) {
   const params = QueryString.parse(req.nextUrl.search, {
     ignoreQueryPrefix: true,
   }) as unknown as ParamsType;
-
-  //if filter[name] is empty in production the filter param is not defined
-  const searchName = params.filter
-    ? params.filter.name
-      ? params.filter.name
-      : ""
-    : "";
 
   const cards = await prisma.card.findMany({
     select: {
@@ -97,10 +89,6 @@ export async function GET(req: NextRequest) {
       },
     },
     where: {
-      OR: [
-        { name: { contains: searchName, mode: "insensitive" } },
-        { id: { contains: searchName, mode: "insensitive" } },
-      ],
       cardExpasionSets: {
         some: { cardExpasionSet: { code: params.expansionSetCode } },
       },

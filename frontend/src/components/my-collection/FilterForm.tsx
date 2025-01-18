@@ -3,7 +3,6 @@
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -24,16 +23,12 @@ export type FilterFormType = z.infer<typeof formSchema>;
 
 export interface FilterFormProps {
   form: UseFormReturn<FilterFormType>;
-  onSubmit: (formData: FilterFormType) => void;
 }
 
-export default function FilterForm({ form, onSubmit }: FilterFormProps) {
+export default function FilterForm({ form }: FilterFormProps) {
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-row items-center justify-center gap-2"
-      >
+      <form className="flex flex-row items-center justify-center gap-2">
         <FormField
           control={form.control}
           name="name"
@@ -63,7 +58,6 @@ export default function FilterForm({ form, onSubmit }: FilterFormProps) {
           />
           <Label htmlFor="max5Cards">5 cards per row</Label>
         </div>
-        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );

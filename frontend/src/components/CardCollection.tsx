@@ -59,30 +59,33 @@ export default function CardCollection({
     defaultValues: { name: "", max5Cards: false },
   });
 
-  const onSubmitFilter = useCallback(
-    (formData: FilterFormType) => {
-      fetchData(formData);
-    },
-    [fetchData],
-  );
+  const formData = form.watch();
+
+  const filteredCards = cards.filter((c) => {
+    if (
+      c.name.toLowerCase().includes(formData.name.toLowerCase()) ||
+      c.id.toLowerCase().includes(formData.name.toLowerCase())
+    ) {
+      return true;
+    }
+    return false;
+  });
 
   useEffect(() => {
-    form.handleSubmit(onSubmitFilter)();
-  }, [form, onSubmitFilter]);
-
-  const max5Cards = form.watch("max5Cards");
+    fetchData();
+  }, [fetchData]);
 
   return (
     <>
-      <FilterForm form={form} onSubmit={onSubmitFilter} />
+      <FilterForm form={form} />
       <div
         className={
-          max5Cards
+          formData.max5Cards
             ? "grid grid-cols-5 gap-2"
             : "flex flex-row flex-wrap items-center justify-center justify-items-center gap-2"
         }
       >
-        {cards.map((pokemonCard) => {
+        {filteredCards.map((pokemonCard) => {
           return (
             <PokemonCard
               key={pokemonCard.id}
