@@ -1,7 +1,7 @@
 "use client";
 import PokemonCard from "@/components/PokemonCard";
 import { CardsActionKind, selectedCardsReducer } from "@/hooks/cardsReducer";
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { CardExpansionSetApiResponse } from "../app/api/card-expansion-set/route";
 import { api } from "@/lib/http";
 import { CardApiResponse } from "@/app/api/my-collection/route";
@@ -13,6 +13,7 @@ import FilterForm, {
 } from "./my-collection/FilterForm";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import CardCollectionSkeleton from "./my-collection/CardCollectionSkeleton";
 
 const getUserCards = async (
   expansionSetCode: CardExpansionSetApiResponse[0]["code"],
@@ -33,11 +34,14 @@ export interface CardCollectionProps {
 export default function CardCollection({
   expansionSetCode,
 }: CardCollectionProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const [cards, dispatch] = useReducer(selectedCardsReducer, []);
 
   const fetchData = useCallback(
     async (filter?: FilterFormType) => {
+      setIsLoading(true);
       const data = await getUserCards(expansionSetCode, filter);
+      setIsLoading(false);
       dispatch({ type: CardsActionKind.SET_STATE, payload: data });
     },
     [expansionSetCode],
@@ -89,6 +93,7 @@ export default function CardCollection({
             : "flex flex-row flex-wrap items-center justify-center justify-items-center gap-2"
         }
       >
+        {isLoading && <CardCollectionSkeleton numberOfCards={50} />}
         {filteredCards.map((pokemonCard) => {
           return (
             <PokemonCard
