@@ -2,6 +2,8 @@ import Link from "next/link";
 import UserMenu from "./UserMenu";
 import { ModeToggle } from "./ModeToggle";
 import SmallScreenMenu from "./SmallScreenMenu";
+import { GITHUB_LINK } from "@/lib/constants";
+import GithubIcon from "./GithubIcon";
 
 export default function Navbar() {
   return (
@@ -26,6 +28,9 @@ export default function Navbar() {
         <div className="flex items-center gap-4 space-x-3 md:order-2 md:space-x-0 rtl:space-x-reverse">
           <UserMenu />
           <ModeToggle />
+          <Link href={GITHUB_LINK} target="_blank" rel="noopener noreferrer">
+            <GithubIcon className="h-6 w-6 text-gray-900 dark:text-white" />
+          </Link>
         </div>
         <div
           className="hidden w-full items-center justify-between md:order-1 md:flex md:w-auto"
