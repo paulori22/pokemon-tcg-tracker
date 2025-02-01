@@ -1,4 +1,4 @@
-import { CardRarity, Prisma } from "@prisma/client";
+import { Card, CardRarity, Prisma } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { prisma } from "../../lib/prisma";
@@ -82,7 +82,7 @@ export function getCardPullChance(
   return null;
 }
 
-export async function fillCardPullChanceColumns() {
+export async function fillCardPullChanceColumns(expansionCode?: string) {
   let cardCountByRarity = await prisma.$queryRaw<
     {
       cardBoosterId: number;
@@ -106,8 +106,17 @@ export async function fillCardPullChanceColumns() {
 
   const cards = await prisma.card.findMany({
     include: { cardBoosters: true, cardExpasionSets: true },
+    ...(expansionCode
+      ? {
+          where: {
+            cardExpasionSets: {
+              some: { cardExpasionSet: { code: expansionCode } },
+            },
+          },
+        }
+      : {}),
   });
-  const cardsWithPullCardChance = [];
+  const cardsWithPullCardChance: Card[] = [];
   for (let index = 0; index < cards.length; index++) {
     const card = cards[index];
 
@@ -132,12 +141,6 @@ export async function fillCardPullChanceColumns() {
         ...card,
         ...allPullRatePositions,
       });
-      /*       console.log({
-        id: card.id,
-        data: {
-          ...allPullRatePositions,
-        },
-      }); */
       try {
         await prisma.card.update({
           data: {
