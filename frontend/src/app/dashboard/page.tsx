@@ -7,7 +7,7 @@ export default async function Dashboard() {
   const { getToken } = await auth();
   const token = await getToken();
   const response = await api.get<DashboardApiResponse>("dashboard", {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${token}`, "Cache-Control": "no-cache" },
   });
   const dashboardData = response.data;
   return (
