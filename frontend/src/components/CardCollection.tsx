@@ -77,6 +77,16 @@ export default function CardCollection({
         return true;
       }
       return false;
+    })
+    .filter((c) => {
+      const boosterId = formData.booster;
+      if (boosterId && boosterId !== "all") {
+        const foundBooster = c.cardBoosters.find(
+          (booster) => String(booster.cardBooster.id) === boosterId,
+        );
+        return foundBooster ? true : false;
+      }
+      return true;
     });
 
   useEffect(() => {
@@ -85,7 +95,7 @@ export default function CardCollection({
 
   return (
     <>
-      <FilterForm form={form} />
+      <FilterForm form={form} expansionSetCode={expansionSetCode} />
       <div
         className={
           formData.max5Cards
