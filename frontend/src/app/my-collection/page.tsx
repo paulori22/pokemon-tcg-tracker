@@ -12,12 +12,22 @@ import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import Link from "next/link";
 import { api } from "@/lib/http";
+import { auth } from "@clerk/nextjs/server";
 
 dayjs.extend(localizedFormat);
 
 export default async function Page() {
-  const response =
-    await api.get<CardExpansionSetApiResponse>("card-expansion-set");
+  const { getToken } = await auth();
+  const token = await getToken();
+
+  const response = await api.get<CardExpansionSetApiResponse>(
+    "card-expansion-set",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
   const cardExpansionSets = response.data;
 
   return (
