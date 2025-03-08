@@ -4,11 +4,12 @@ import { ModeToggle } from "./ModeToggle";
 import SmallScreenMenu from "./SmallScreenMenu";
 import { GITHUB_LINK } from "@/lib/constants";
 import GithubIcon from "./GithubIcon";
+import Image from "next/image";
 
 export default function Navbar() {
   return (
     <nav className="border-gray-200 bg-white dark:bg-gray-900">
-      <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
+      <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-2">
         <div className="md:invisible">
           <SmallScreenMenu />
         </div>
@@ -16,13 +17,15 @@ export default function Navbar() {
           href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          {/*           <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8"
-            alt="Flowbite Logo"
-          /> */}
+          <Image
+            src={"/ptcgp_icon.png"}
+            width={50}
+            height={50}
+            className="h-12 w-12"
+            alt="PTCGP Icon"
+          />
           <span className="self-center whitespace-nowrap text-sm font-semibold dark:text-white md:text-2xl">
-            Pokemon TCG Pocket Tracker
+            PTCG Tracker
           </span>
         </Link>
         <div className="flex items-center gap-4 space-x-3 md:order-2 md:space-x-0 rtl:space-x-reverse">
