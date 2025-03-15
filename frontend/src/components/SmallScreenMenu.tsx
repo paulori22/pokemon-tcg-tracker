@@ -27,6 +27,9 @@ export default async function SmallScreenMenu() {
         <DropdownMenuItem>
           <Link href={"/my-collection"}>My Collection</Link>
         </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={"/deck"}>Deck</Link>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

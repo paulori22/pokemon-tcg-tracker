@@ -1,6 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { memo } from "react";
 
-export default function CardSkeleton() {
+export default memo(function CardSkeleton() {
   return (
     <div className="flex max-w-44 flex-col items-center justify-center justify-items-center gap-2 p-1">
       <Skeleton className="h-[200px] w-[150px]" />
@@ -10,4 +11,4 @@ export default function CardSkeleton() {
       </div>
     </div>
   );
-}
+});

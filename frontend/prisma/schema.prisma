@@ -40,6 +40,7 @@ model Card {
     userCards            UsersOnCards[]
     cardBoosters         CardOnCardBooster[]
     cardExpasionSets     CardOnCardExpansionSet[]
+    deckOnCards          DeckOnCards[]
 }
 
 model CardOnCardBooster {
@@ -72,6 +73,41 @@ model UsersOnCards {
     @@id([userId, cardId])
 }
 
+model Deck {
+    id          Int           @id @default(autoincrement())
+    name        String
+    strategy    String
+    userId      String
+    visibility  Visibility
+    cards       DeckOnCards[]
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @default(now())
+    deckOnRates DeckOnRates[]
+}
+
+model DeckOnCards {
+    deckId    Int
+    deck      Deck     @relation(fields: [deckId], references: [id])
+    cardId    String
+    card      Card     @relation(fields: [cardId], references: [id])
+    quantity  Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+
+    @@id([deckId, cardId])
+}
+
+model DeckOnRates {
+    deckId    Int
+    deck      Deck     @relation(fields: [deckId], references: [id])
+    userId    String
+    rate      Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+
+    @@id([deckId, userId])
+}
+
 enum CardRarity {
     Promo
     OneDiamond
@@ -96,4 +132,9 @@ enum CardType {
     Darkness
     Dragon
     Trainer
+}
+
+enum Visibility {
+    Public
+    Private
 }

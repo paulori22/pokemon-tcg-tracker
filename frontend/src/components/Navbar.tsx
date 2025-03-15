@@ -25,7 +25,7 @@ export default function Navbar() {
             alt="PTCGP Icon"
           />
           <span className="self-center whitespace-nowrap text-sm font-semibold dark:text-white md:text-2xl">
-            PTCG Tracker
+            PTCGP Tracker
           </span>
         </Link>
         <div className="flex items-center gap-4 space-x-3 md:order-2 md:space-x-0 rtl:space-x-reverse">
@@ -64,6 +64,14 @@ export default function Navbar() {
                 className="block rounded px-3 py-2 text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500"
               >
                 My Collection
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/deck"
+                className="block rounded px-3 py-2 text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500"
+              >
+                Deck
               </Link>
             </li>
           </ul>
