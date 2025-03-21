@@ -1,15 +1,69 @@
 import { DeckFormType } from "@/app/deck/new/page";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../../../../lib/prisma";
-import { countBy, map } from "lodash";
+import { countBy, map, round } from "lodash";
+import { Prisma } from "@prisma/client";
+
+export type DeckResponse = Prisma.DeckGetPayload<{
+  include: {
+    cards: {
+      include: {
+        card: {
+          include: { cardBoosters: true; cardExpasionSets: true };
+        };
+      };
+    };
+  };
+}> & { rateAverage: number | null; rateCount: number | null };
+
+export async function GET() {
+  const publicDecks = await prisma.deck.findMany({
+    include: {
+      cards: {
+        include: {
+          card: {
+            include: {
+              cardBoosters: true,
+              cardExpasionSets: { include: { cardExpasionSet: true } },
+            },
+          },
+        },
+      },
+    },
+    where: { visibility: "Public" },
+  });
+
+  const rateStatisticPublicDecks = await prisma.deckOnRates.groupBy({
+    by: ["deckId"],
+    _avg: { rate: true },
+    _count: { rate: true },
+    where: { deck: { visibility: "Public" } },
+  });
+
+  return Response.json(
+    publicDecks.map((deck) => {
+      const statistic = rateStatisticPublicDecks.find(
+        (row) => row.deckId === deck.id,
+      );
+      return {
+        ...deck,
+        rateAverage: statistic
+          ? statistic._avg.rate
+            ? round(statistic._avg.rate, 2)
+            : null
+          : null,
+        rateCount: statistic ? statistic._count.rate : null,
+      };
+    }),
+  );
+}
 
 export async function POST(req: Request) {
-  /*   const { userId } = await auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return new Response("User is not signed in.", { status: 401 });
-  } */
-  const userId = "Test";
+  }
 
   const { cards, ...deckData } = (await req.json()) as DeckFormType;
 

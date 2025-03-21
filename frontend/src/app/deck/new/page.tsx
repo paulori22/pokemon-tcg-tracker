@@ -25,10 +25,11 @@ import { Button } from "@/components/ui/button";
 import CardsAvailable from "@/components/deck/CardsAvailable";
 import { Visibility } from "@prisma/client";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useRouter } from "next/navigation";
 
 export const formSchema = z.object({
-  name: z.string(),
-  strategy: z.string(),
+  name: z.string().nonempty(),
+  strategy: z.string().nonempty(),
   visibility: z.nativeEnum(Visibility),
   cards: z.array(z.string()),
 });
@@ -86,6 +87,8 @@ export default function DeckNew() {
     [form],
   );
 
+  const router = useRouter();
+
   const handleSubmit = useCallback((formData: DeckFormType) => {
     console.log("submit", formData);
     if (formData.cards.length !== 20) {
@@ -94,6 +97,7 @@ export default function DeckNew() {
     }
     api.post("deck", formData).then(() => {
       toast.success("Deck successfully created!");
+      router.push("/deck");
     });
   }, []);
 
@@ -174,9 +178,25 @@ export default function DeckNew() {
         <div>
           <h3 className="text-2xl">Deck Cards ({deckCards.length}/20)</h3>
           <div className="flex flex-row flex-wrap items-center justify-center justify-items-center gap-2">
-            {
-              //TODO: Order pokemon cards than others (items)
-              deckCards.sort().map((cardId: string, index: number) => {
+            {deckCards
+              .sort((cardAId, cardBId) => {
+                const cardA = allCards?.find((c) => c.id === cardAId);
+                const cardB = allCards?.find((c) => c.id === cardBId);
+                if (!cardA || !cardB) {
+                  return 0;
+                }
+
+                if (cardA.type !== "Trainer" && cardB.type === "Trainer") {
+                  return -1;
+                }
+
+                if (cardA.type === "Trainer" && cardB.type !== "Trainer") {
+                  return 1;
+                }
+
+                return cardA.id.localeCompare(cardB.id);
+              })
+              .map((cardId: string, index: number) => {
                 const card = allCards?.find((c) => c.id === cardId);
                 if (!card) {
                   return null;
@@ -189,8 +209,7 @@ export default function DeckNew() {
                     onCLick={onClickDeckCard}
                   />
                 );
-              })
-            }
+              })}
           </div>
         </div>
         <div>
