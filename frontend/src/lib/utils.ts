@@ -12,16 +12,18 @@ export function zeroPad(num: number, places: number) {
   return Array(+(zero > 0 && zero)).join("0") + num;
 }
 
-const chancesCardPullTable = [
-  [1, 0, 0],
-  [0, 0.9, 0.6],
-  [0, 0.05, 0.2],
-  [0, 0.01666, 0.06664],
-  [0, 0.02572, 0.10288],
-  [0, 0.005, 0.02],
-  [0, 0.00222, 0.00888],
-  [0, 0.0004, 0.0016],
-];
+const chancesCardPullTable: Record<Exclude<CardRarity, "Promo">, number[]> = {
+  OneDiamond: [1, 0, 0],
+  TwoDiamond: [0, 0.9, 0.6],
+  ThreeDiamond: [0, 0.05, 0.2],
+  FourDiamond: [0, 0.01666, 0.06664],
+  OneStar: [0, 0.02572, 0.10288],
+  TwoStar: [0, 0.005, 0.02],
+  ThreeStar: [0, 0.00222, 0.00888],
+  Crown: [0, 0.0004, 0.0016],
+  ShinyOne: [0, 0.00714, 0.02857],
+  ShinyTwo: [0, 0.00333, 0.01333],
+};
 
 export enum CardPullPosition {
   firstThirdPullChance = "firstThirdPullChance",
@@ -31,28 +33,12 @@ export enum CardPullPosition {
 
 export type CardPullPositionType = keyof typeof CardPullPosition;
 
-export function getTableIndexRarity(rarity: CardRarity) {
-  switch (rarity) {
-    case "OneDiamond":
-      return 0;
-    case "TwoDiamond":
-      return 1;
-    case "ThreeDiamond":
-      return 2;
-    case "FourDiamond":
-      return 3;
-    case "OneStar":
-      return 4;
-    case "TwoStar":
-      return 5;
-    case "ThreeStar":
-      return 6;
-    case "Crown":
-      return 7;
-
-    default:
-      return null;
+export function getRarityTableRow(rarity: CardRarity): null | number[] {
+  if (rarity in chancesCardPullTable) {
+    // @ts-expect-error error not expected, this is how js works
+    return chancesCardPullTable[rarity];
   }
+  return null;
 }
 
 export function getTableIndexPosition(position: CardPullPositionType) {
@@ -73,11 +59,11 @@ export function getCardPullChance(
   rarity: CardRarity,
   position: CardPullPositionType,
 ) {
-  const chanceTableRowIndex = getTableIndexRarity(rarity);
+  const chanceTableRow = getRarityTableRow(rarity);
   const chanceTableColumnPositon = getTableIndexPosition(position);
 
-  if (chanceTableRowIndex !== null && chanceTableColumnPositon !== null) {
-    return chancesCardPullTable[chanceTableRowIndex][chanceTableColumnPositon];
+  if (chanceTableRow !== null && chanceTableColumnPositon !== null) {
+    return chanceTableRow[chanceTableColumnPositon];
   }
   return null;
 }
@@ -178,3 +164,5 @@ export function roundNumber(num: number, scale: number) {
     );
   }
 }
+
+export const isDevEnv = process.env.NODE_ENV !== "production";

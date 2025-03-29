@@ -81,6 +81,8 @@ enum CardRarity {
     OneStar
     TwoStar
     ThreeStar
+    ShinyOne
+    ShinyTwo
     Crown
 }
 
